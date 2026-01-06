@@ -6,5 +6,7 @@
     <Project Path="src/ATS.Domain/ATS.Domain.csproj" />
     <Project Path="src/ATS.Infrastructure/ATS.Infrastructure.csproj" />
   </Folder>
-  <Folder Name="/tests/" />
+  <Folder Name="/tests/">
+    <Project Path="tests/ATS.UnitTests/ATS.UnitTests.csproj" Id="229d202f-80ec-459c-b843-54d2cb0516ea" />
+  </Folder>
 </Solution>
