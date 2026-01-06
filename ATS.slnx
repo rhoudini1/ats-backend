@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/ATS.API/ATS.API.csproj" />
+    <Project Path="src/ATS.Application/ATS.Application.csproj" />
+    <Project Path="src/ATS.Contracts/ATS.Contracts.csproj" />
+    <Project Path="src/ATS.Domain/ATS.Domain.csproj" />
+    <Project Path="src/ATS.Infrastructure/ATS.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/" />
+</Solution>
