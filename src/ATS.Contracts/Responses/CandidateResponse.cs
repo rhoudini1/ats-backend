@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿namespace ATS.Contracts.Responses;
 
-namespace ATS.Contracts.Responses;
-
-public class RegisterCandidateResponse
+public class CandidateResponse
 {
     public required Guid Id { get; set; }
 

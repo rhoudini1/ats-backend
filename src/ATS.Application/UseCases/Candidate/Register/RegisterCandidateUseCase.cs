@@ -18,7 +18,7 @@ public class RegisterCandidateUseCase : IRegisterCandidateUseCase
         _candidateRepository = candidateRepository;
     }
 
-    public async Task<RegisterCandidateResponse> Execute(RegisterCandidateRequest request)
+    public async Task<CandidateResponse> Execute(RegisterCandidateRequest request)
     {
         await Validate(request);
 

@@ -18,9 +18,9 @@ public static class CandidateContractMapping
         };
     }
 
-    public static RegisterCandidateResponse MapToResponse(this Candidate candidate)
+    public static CandidateResponse MapToResponse(this Candidate candidate)
     {
-        return new RegisterCandidateResponse
+        return new CandidateResponse
         {
             Id = candidate.Id,
             FullName = candidate.FullName,

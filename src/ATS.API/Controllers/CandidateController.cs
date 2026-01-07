@@ -1,4 +1,5 @@
-﻿using ATS.Application.UseCases.Candidate.Register;
+﻿using ATS.Application.UseCases.Candidate.GetById;
+using ATS.Application.UseCases.Candidate.Register;
 using ATS.Contracts.Requests;
 using ATS.Contracts.Responses;
 using Microsoft.AspNetCore.Mvc;
@@ -10,7 +11,7 @@ namespace ATS.API.Controllers;
 public class CandidateController : ControllerBase
 {
     [HttpPost]
-    [ProducesResponseType(typeof(RegisterCandidateResponse), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(CandidateResponse), StatusCodes.Status201Created)]
     public async Task<IActionResult> Register(
         [FromServices] IRegisterCandidateUseCase useCase,
         [FromBody] RegisterCandidateRequest request)
