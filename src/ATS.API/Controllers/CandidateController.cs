@@ -20,4 +20,19 @@ public class CandidateController : ControllerBase
 
         return Created(string.Empty, result);
     }
+
+    [HttpGet("{id:guid}")]
+    [ProducesResponseType(typeof(CandidateResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetCandidate(
+        [FromServices] IGetCandidateByIdUseCase useCase,
+        [FromRoute] Guid id)
+    {
+        var result = await useCase.Execute(id);
+
+        if (result is null)
+            return NotFound();
+
+        return Ok(result);
+    }
 }
