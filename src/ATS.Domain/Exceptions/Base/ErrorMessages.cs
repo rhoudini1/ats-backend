@@ -14,6 +14,7 @@ public static class ErrorMessages
         public const string FullNameTooLong = "Full name cannot exceed 100 characters.";
 
         public const string EmailRequired = "Email is required.";
+        public const string EmailAlreadyRegistered = "This email is already registered.";
         public const string InvalidEmailFormat = "Invalid email format.";
     }
 }

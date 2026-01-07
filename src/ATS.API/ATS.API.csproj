@@ -12,12 +12,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\ATS.Application\ATS.Application.csproj" />
     <ProjectReference Include="..\ATS.Contracts\ATS.Contracts.csproj" />
+    <ProjectReference Include="..\ATS.Infrastructure\ATS.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
