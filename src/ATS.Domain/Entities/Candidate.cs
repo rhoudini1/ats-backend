@@ -1,9 +1,4 @@
-﻿using ATS.Domain.ValueObjects;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ATS.Domain.Entities;
+﻿namespace ATS.Domain.Entities;
 
 public class Candidate
 {
@@ -11,7 +6,7 @@ public class Candidate
 
     public required string FullName { get; set; }
 
-    public required Email Email { get; set; }
+    public required string Email { get; set; }
 
     public string? ResumeUrl { get; set; }
 

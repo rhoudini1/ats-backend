@@ -1,7 +1,6 @@
 ﻿using ATS.Contracts.Requests;
 using ATS.Contracts.Responses;
 using ATS.Domain.Entities;
-using ATS.Domain.ValueObjects;
 
 namespace ATS.Application.Mapping;
 
@@ -13,7 +12,7 @@ public static class CandidateContractMapping
         {
             Id = Guid.NewGuid(),
             FullName = request.FullName,
-            Email = Email.Create(request.Email),
+            Email = request.Email,
             CreatedAt = DateTime.UtcNow
         };
     }

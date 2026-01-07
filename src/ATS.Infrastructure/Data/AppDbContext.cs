@@ -1,5 +1,4 @@
 ﻿using ATS.Domain.Entities;
-using ATS.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using MongoDB.EntityFrameworkCore.Extensions;
 
@@ -19,10 +18,6 @@ public class AppDbContext : DbContext
         {
             cm.ToCollection("candidates");
             cm.HasKey(candidate => candidate.Id);
-            cm.Property(candidate => candidate.Email).HasConversion(
-                email => email.Value,
-                value => Email.Create(value)
-            );
         });
     }
 }
