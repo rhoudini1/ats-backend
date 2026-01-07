@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ATS.Contracts.Requests;
+﻿namespace ATS.Contracts.Requests;
 
 public class RegisterCandidateRequest
 {
