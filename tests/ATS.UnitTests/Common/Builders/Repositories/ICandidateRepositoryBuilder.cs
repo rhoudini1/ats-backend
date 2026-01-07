@@ -25,6 +25,13 @@ public class ICandidateRepositoryBuilder
         return this;
     }
 
+    public ICandidateRepositoryBuilder WithGetById(Guid id, Candidate? candidate)
+    {
+        _repository.Setup(repo => repo.GetByIdAsync(id))
+           .ReturnsAsync(candidate);
+        return this;
+    }
+
     public ICandidateRepository Build() => _repository.Object;
 
     public Mock<ICandidateRepository> GetMock() => _repository;
