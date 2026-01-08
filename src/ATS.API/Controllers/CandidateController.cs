@@ -1,4 +1,5 @@
-﻿using ATS.Application.UseCases.Candidate.GetById;
+﻿using ATS.Application.UseCases.Candidate.Delete;
+using ATS.Application.UseCases.Candidate.GetById;
 using ATS.Application.UseCases.Candidate.List;
 using ATS.Application.UseCases.Candidate.Register;
 using ATS.Contracts.Requests;
@@ -49,5 +50,21 @@ public class CandidateController : ControllerBase
         var result = await useCase.Execute(request, token);
 
         return Ok(result);
+    }
+
+    [HttpDelete("{id:guid}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> DeleteCandidate(
+        [FromServices] IDeleteCandidateByIdUseCase useCase,
+        [FromRoute] Guid id,
+        CancellationToken token)
+    {
+        bool deleted = await useCase.Execute(id, token);
+
+        if (!deleted)
+            return NotFound();
+
+        return NoContent();
     }
 }
