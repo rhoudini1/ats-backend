@@ -5,7 +5,9 @@ public static class ErrorMessages
     public static class Errors
     {
         public const string UnknownError = "An unknown error has occurred. Please try again later.";
+
         public const string CandidateNotFound = "The informed candidate was not found.";
+        public const string JobNotFound = "The informed job was not found.";
 
         // Logs
         public const string ValidationErrorLog = "Validation failure at endpoint {Path}: {Messages}";
@@ -33,6 +35,7 @@ public static class ErrorMessages
         public const string JobDescriptionRequired = "Job description is required.";
         public const string JobDescriptionTooShort = "Job description must be at least 10 characters long.";
         public const string JobDescriptionTooLong = "Job description cannot exceed 2000 characters.";
+        public const string InvalidJobStatus = "The provided job status is invalid.";
     }
 
     public static class DatabaseHealth

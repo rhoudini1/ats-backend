@@ -6,6 +6,7 @@ using ATS.Application.UseCases.Candidate.Update;
 using ATS.Application.UseCases.Job.GetById;
 using ATS.Application.UseCases.Job.List;
 using ATS.Application.UseCases.Job.Register;
+using ATS.Application.UseCases.Job.Update;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ATS.Application;
@@ -23,5 +24,6 @@ public static class DependencyInjectionExtension
         services.AddScoped<IRegisterJobUseCase, RegisterJobUseCase>();
         services.AddScoped<IGetJobByIdUseCase, GetJobByIdUseCase>();
         services.AddScoped<IListJobsUseCase, ListJobsUseCase>();
+        services.AddScoped<IUpdateJobUseCase, UpdateJobUseCase>();
     }
 }

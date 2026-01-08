@@ -1,6 +1,7 @@
 ﻿using ATS.Application.UseCases.Job.GetById;
 using ATS.Application.UseCases.Job.List;
 using ATS.Application.UseCases.Job.Register;
+using ATS.Application.UseCases.Job.Update;
 using ATS.Contracts.Requests;
 using ATS.Contracts.Responses;
 using Microsoft.AspNetCore.Mvc;
@@ -59,6 +60,23 @@ public class JobController : ControllerBase
         CancellationToken token)
     {
         var result = await useCase.Execute(request, token);
+
+        return Ok(result);
+    }
+
+    [HttpPut(ApiEndpoints.Job.Update)]
+    [ProducesResponseType(typeof(JobResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> UpdateJob(
+    [FromServices] IUpdateJobUseCase useCase,
+    [FromRoute] Guid id,
+    [FromBody] UpdateJobRequest request,
+    CancellationToken token)
+    {
+        var result = await useCase.Execute(id, request, token);
+
+        await _outputCacheStore.EvictByTagAsync("jobs", token);
 
         return Ok(result);
     }
