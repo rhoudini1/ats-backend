@@ -46,6 +46,13 @@ public class ICandidateRepositoryBuilder
         return this;
     }
 
+    public ICandidateRepositoryBuilder WithDelete(Guid id)
+    {
+        _repository.Setup(repo => repo.DeleteAsync(id, It.IsAny<CancellationToken>()))
+           .Returns(Task.FromResult(true));
+        return this;
+    }
+
     public ICandidateRepository Build() => _repository.Object;
 
     public Mock<ICandidateRepository> GetMock() => _repository;
