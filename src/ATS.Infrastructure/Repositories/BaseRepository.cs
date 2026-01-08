@@ -1,4 +1,5 @@
-﻿using ATS.Domain.Interfaces.Repositories;
+﻿using ATS.Domain.Entities;
+using ATS.Domain.Interfaces.Repositories;
 using ATS.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -27,9 +28,14 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
         return await _dbSet.FindAsync(id);
     }
 
-    public async Task<IEnumerable<T>> GetAllAsync()
+    public async Task<IEnumerable<T>> GetPagedAsync(int pageNumber, int pageSize)
     {
-        return await _dbSet.ToListAsync();
+        return await _dbSet.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+    }
+
+    public async Task<int> CountTotalAsync()
+    {
+        return await _dbSet.CountAsync();
     }
 
     public async Task<T> UpdateAsync(T entity)

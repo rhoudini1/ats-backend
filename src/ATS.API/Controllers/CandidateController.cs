@@ -1,4 +1,5 @@
 ﻿using ATS.Application.UseCases.Candidate.GetById;
+using ATS.Application.UseCases.Candidate.List;
 using ATS.Application.UseCases.Candidate.Register;
 using ATS.Contracts.Requests;
 using ATS.Contracts.Responses;
@@ -32,6 +33,17 @@ public class CandidateController : ControllerBase
 
         if (result is null)
             return NotFound();
+
+        return Ok(result);
+    }
+
+    [HttpGet]
+    [ProducesResponseType(typeof(CandidateResponse), StatusCodes.Status200OK)]
+    public async Task<IActionResult> ListCandidates(
+        [FromServices] IListCandidatesUseCase useCase,
+        [FromQuery] ListRequest request)
+    {
+        var result = await useCase.Execute(request);
 
         return Ok(result);
     }

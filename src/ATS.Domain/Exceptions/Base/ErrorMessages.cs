@@ -16,5 +16,9 @@ public static class ErrorMessages
         public const string EmailRequired = "Email is required.";
         public const string EmailAlreadyRegistered = "This email is already registered.";
         public const string InvalidEmailFormat = "Invalid email format.";
+
+        public const string PageNumberNegative = "Page number must be greater than 0.";
+        public const string PageSizeNegative = "Page size must be greater than 0.";
+        public const string PageSizeExceeded = "Page size must not exceed 100.";
     }
 }
