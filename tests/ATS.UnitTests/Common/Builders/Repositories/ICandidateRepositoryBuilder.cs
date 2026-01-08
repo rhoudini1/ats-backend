@@ -32,6 +32,20 @@ public class ICandidateRepositoryBuilder
         return this;
     }
 
+    public ICandidateRepositoryBuilder WithGetPaged(int page, int size, IEnumerable<ATS.Domain.Entities.Candidate> candidates)
+    {
+        _repository.Setup(repo => repo.GetPagedAsync(page, size))
+            .ReturnsAsync(candidates);
+        return this;
+    }
+
+    public ICandidateRepositoryBuilder WithCountTotal(int total)
+    {
+        _repository.Setup(repo => repo.CountTotalAsync())
+            .ReturnsAsync(total);
+        return this;
+    }
+
     public ICandidateRepository Build() => _repository.Object;
 
     public Mock<ICandidateRepository> GetMock() => _repository;
