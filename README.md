@@ -101,19 +101,6 @@ O projeto busca seguir a Arquitetura Limpa, que permite melhor manutenção e po
 - tests/UnitTests: projeto xUnit para testes de unidade.
 
 
-## 🧪 Testes
-
-Utilizam o padrão Builder para gerar recursos comuns, principalmente entidades e requests, com fake data (Bogus) e mocks (Moq).
-
-Testei principalmente:
-- Casos de uso: pois contêm regras de negócio;
-- Validators: importante garantir o funcionamento correto.
-
-Não adicionei testes unitários para os Controllers, porque testes de integração já ajudam a testá-los, quando existentes. Mas seria possível adicionar testes para eles também.
-
-Da mesma forma, como a API até aqui é bastante simples, não houve necessidade de adicionar testes a nível de domínio (entidades, value-objects ou eventos de domínio).
-
-
 ## 🔬 Health Check
 
 Endpoint para consultar saúde da base de dados disponível em `/_health`.
@@ -138,6 +125,13 @@ Usei filtro de exceptions que traz várias vantagens:
 Adicionei logs estruturados com Serilog, algo que no longo prazo, com estratégias de monitoramento apropriadas, é muito útil.
 
 No momento, apenas loga no Console, mas outras estratégias podem ser adicionadas facilmente.
+
+
+## 🚅 Cache
+
+Implementei um cache bem simples, de 1 minuto, nativo do .NET, para endpoints de leitura.
+
+Os endpoints de escrita possuem a chamada `await _outputCacheStore.EvictByTagAsync(tag, cancellationToken);` para apagar o cache.
 
 
 ## 🗺️ Mapping
@@ -165,8 +159,32 @@ Usando a mesma estratégia da classe estática com valores constantes.
 **Alternativa:** Poderia criar um Resource com arquivos de tradução e adicionar Middleware de tradução no futuro.
 
 
-## Mensagens de commit
+## 🛂 Mensagens de commit
 
 Buscam seguir o Conventional Commits, dividindo commits em categorias com seus respectivos prefixos: feat, fix, refactor, chore, test (etc.).
 
 Da mesma forma, os commits buscam se concentrar em uma única funcionalidade ou mudança.
+
+
+## 🧪 Testes
+
+Utilizam o padrão Builder para gerar recursos comuns, principalmente entidades e requests, com fake data (Bogus) e mocks (Moq).
+
+Testei principalmente:
+- Casos de uso: pois contêm regras de negócio;
+- Validators: importante garantir o funcionamento correto.
+
+Não adicionei testes unitários para os Controllers, porque testes de integração já ajudam a testá-los, quando existentes. Mas seria possível adicionar testes para eles também.
+
+Da mesma forma, como a API até aqui é bastante simples, não houve necessidade de adicionar testes a nível de domínio (entidades, value-objects ou eventos de domínio).
+
+
+---
+
+# 🧐 Considerações
+
+## Soft delete
+
+Em vez de apagar registros do banco de dados, é possível implementar um mecanismo de soft delete para apenas inativar registros.
+
+O EF Core possui métodos que filtram registros com base em regras definidas, evitando que se faça a filtragem manual com `.Where()`, que pode ser esquecida pelo desenvolvedor.

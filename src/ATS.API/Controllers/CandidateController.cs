@@ -6,12 +6,20 @@ using ATS.Application.UseCases.Candidate.Update;
 using ATS.Contracts.Requests;
 using ATS.Contracts.Responses;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OutputCaching;
 
 namespace ATS.API.Controllers;
 
 [ApiController]
 public class CandidateController : ControllerBase
 {
+    private readonly IOutputCacheStore _outputCacheStore;
+
+    public CandidateController(IOutputCacheStore outputCacheStore)
+    {
+        _outputCacheStore = outputCacheStore;
+    }
+
     [HttpPost(ApiEndpoints.Candidate.Create)]
     [ProducesResponseType(typeof(CandidateResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -22,10 +30,13 @@ public class CandidateController : ControllerBase
     {
         var result = await useCase.Execute(request, token);
 
+        await _outputCacheStore.EvictByTagAsync("candidates", token);
+
         return Created(string.Empty, result);
     }
 
     [HttpGet(ApiEndpoints.Candidate.GetById)]
+    [OutputCache(PolicyName = "CandidatesCache")]
     [ProducesResponseType(typeof(CandidateResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetCandidate(
@@ -42,6 +53,7 @@ public class CandidateController : ControllerBase
     }
 
     [HttpGet(ApiEndpoints.Candidate.List)]
+    [OutputCache(PolicyName = "CandidatesCache")]
     [ProducesResponseType(typeof(CandidateResponse), StatusCodes.Status200OK)]
     public async Task<IActionResult> ListCandidates(
         [FromServices] IListCandidatesUseCase useCase,
@@ -65,6 +77,8 @@ public class CandidateController : ControllerBase
     {
         var result = await useCase.Execute(id, request, token);
 
+        await _outputCacheStore.EvictByTagAsync("candidates", token);
+
         return Ok(result);
     }
 
@@ -80,6 +94,8 @@ public class CandidateController : ControllerBase
 
         if (!deleted)
             return NotFound();
+
+        await _outputCacheStore.EvictByTagAsync("candidates", token);
 
         return NoContent();
     }

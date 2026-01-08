@@ -21,6 +21,15 @@ try
 
     builder.Host.UseSerilog();
 
+    builder.Services.AddOutputCache(options =>
+    {
+        options.AddBasePolicy(c => c.Cache());
+        options.AddPolicy("CandidatesCache", c =>
+            c.Cache()
+            .Expire(TimeSpan.FromMinutes(1))
+            .Tag("candidates"));
+    });
+
     builder.Services.AddControllers();
 
     builder.Services.AddHealthChecks()
@@ -53,6 +62,8 @@ try
     app.UseHttpsRedirection();
 
     app.UseAuthorization();
+
+    app.UseOutputCache();
 
     app.MapControllers();
 
