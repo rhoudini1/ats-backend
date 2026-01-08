@@ -1,4 +1,5 @@
-﻿using ATS.Application.UseCases.Job.GetById;
+﻿using ATS.Application.UseCases.Job.Delete;
+using ATS.Application.UseCases.Job.GetById;
 using ATS.Application.UseCases.Job.List;
 using ATS.Application.UseCases.Job.Register;
 using ATS.Application.UseCases.Job.Update;
@@ -79,5 +80,23 @@ public class JobController : ControllerBase
         await _outputCacheStore.EvictByTagAsync("jobs", token);
 
         return Ok(result);
+    }
+
+    [HttpDelete(ApiEndpoints.Job.Delete)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> DeleteJob(
+    [FromServices] IDeleteJobByIdUseCase useCase,
+    [FromRoute] Guid id,
+    CancellationToken token)
+    {
+        bool deleted = await useCase.Execute(id, token);
+
+        if (!deleted)
+            return NotFound();
+
+        await _outputCacheStore.EvictByTagAsync("jobs", token);
+
+        return NoContent();
     }
 }
