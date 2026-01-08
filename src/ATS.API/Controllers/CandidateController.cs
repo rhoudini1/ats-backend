@@ -9,11 +9,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ATS.API.Controllers;
 
-[Route("api/[controller]")]
 [ApiController]
 public class CandidateController : ControllerBase
 {
-    [HttpPost]
+    [HttpPost(ApiEndpoints.Candidate.Create)]
     [ProducesResponseType(typeof(CandidateResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Register(
@@ -26,7 +25,7 @@ public class CandidateController : ControllerBase
         return Created(string.Empty, result);
     }
 
-    [HttpGet("{id:guid}")]
+    [HttpGet(ApiEndpoints.Candidate.GetById)]
     [ProducesResponseType(typeof(CandidateResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetCandidate(
@@ -42,7 +41,7 @@ public class CandidateController : ControllerBase
         return Ok(result);
     }
 
-    [HttpGet]
+    [HttpGet(ApiEndpoints.Candidate.List)]
     [ProducesResponseType(typeof(CandidateResponse), StatusCodes.Status200OK)]
     public async Task<IActionResult> ListCandidates(
         [FromServices] IListCandidatesUseCase useCase,
@@ -54,10 +53,10 @@ public class CandidateController : ControllerBase
         return Ok(result);
     }
 
-    [HttpPut("{id:guid}")]
+    [HttpPut(ApiEndpoints.Candidate.Update)]
     [ProducesResponseType(typeof(CandidateResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-
     public async Task<IActionResult> UpdateCandidate(
         [FromServices] IUpdateCandidateUseCase useCase,
         [FromRoute] Guid id,
@@ -69,7 +68,7 @@ public class CandidateController : ControllerBase
         return Ok(result);
     }
 
-    [HttpDelete("{id:guid}")]
+    [HttpDelete(ApiEndpoints.Candidate.Delete)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DeleteCandidate(
