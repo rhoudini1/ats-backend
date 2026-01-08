@@ -5,6 +5,7 @@ public static class ErrorMessages
     public static class Errors
     {
         public const string UnknownError = "An unknown error has occurred. Please try again later.";
+        public const string CandidateNotFound = "The informed candidate was not found.";
     }
 
     public static class Validation
@@ -16,6 +17,7 @@ public static class ErrorMessages
         public const string EmailRequired = "Email is required.";
         public const string EmailAlreadyRegistered = "This email is already registered.";
         public const string InvalidEmailFormat = "Invalid email format.";
+        public const string EmailChangeNotAllowed = "Email change is not allowed.";
 
         public const string PageNumberNegative = "Page number must be greater than 0.";
         public const string PageSizeNegative = "Page size must be greater than 0.";
