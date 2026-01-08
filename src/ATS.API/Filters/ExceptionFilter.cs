@@ -9,6 +9,13 @@ namespace ATS.API.Filters;
 
 public class ExceptionFilter : IExceptionFilter
 {
+    private readonly ILogger<ExceptionFilter> _logger;
+
+    public ExceptionFilter(ILogger<ExceptionFilter> logger)
+    {
+        _logger = logger;
+    }
+
     public void OnException(ExceptionContext context)
     {
         if (context.Exception is CustomException)
@@ -22,6 +29,11 @@ public class ExceptionFilter : IExceptionFilter
         if (context.Exception is ErrorOnValidationException)
         {
             var exception = context.Exception as ErrorOnValidationException;
+
+            _logger.LogWarning(ErrorMessages.Errors.ValidationErrorLog,
+                context.HttpContext.Request.Path,
+                exception!.Messages);
+
             context.HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
             context.Result = new BadRequestObjectResult(new JsonErrorResponse(exception!.Messages));
         }
@@ -29,6 +41,9 @@ public class ExceptionFilter : IExceptionFilter
 
     private void HandleUnknownException(ExceptionContext context)
     {
+        _logger.LogError(context.Exception, ErrorMessages.Errors.UnknownErrorLog,
+            context.HttpContext.Request.Path);
+
         context.HttpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
         context.Result = new ObjectResult(new JsonErrorResponse(ErrorMessages.Errors.UnknownError));
     }

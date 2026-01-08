@@ -6,6 +6,10 @@ public static class ErrorMessages
     {
         public const string UnknownError = "An unknown error has occurred. Please try again later.";
         public const string CandidateNotFound = "The informed candidate was not found.";
+
+        // Logs
+        public const string ValidationErrorLog = "Validation failure at endpoint {Path}: {Messages}";
+        public const string UnknownErrorLog = "An unknown error occurred at endpoint {Path}";
     }
 
     public static class Validation
