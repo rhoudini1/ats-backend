@@ -7,6 +7,7 @@ namespace ATS.Infrastructure.Data;
 public class AppDbContext : DbContext
 {
     public DbSet<Candidate> Candidates { get; set; }
+    public DbSet<Job> Jobs { get; set; }
 
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
@@ -18,6 +19,13 @@ public class AppDbContext : DbContext
         {
             cm.ToCollection("candidates");
             cm.HasKey(candidate => candidate.Id);
+        });
+
+        modelBuilder.Entity<Job>(jm =>
+        {
+            jm.ToCollection("jobs");
+            jm.HasKey(job => job.Id);
+            jm.Property(job => job.Status).HasConversion<string>();
         });
     }
 }

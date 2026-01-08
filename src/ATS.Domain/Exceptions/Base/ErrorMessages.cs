@@ -26,6 +26,13 @@ public static class ErrorMessages
         public const string PageNumberNegative = "Page number must be greater than 0.";
         public const string PageSizeNegative = "Page size must be greater than 0.";
         public const string PageSizeExceeded = "Page size must not exceed 100.";
+
+        public const string JobTitleRequired = "Job title is required.";
+        public const string JobTitleTooShort = "Job title must be at least 3 characters long.";
+        public const string JobTitleTooLong = "Job title cannot exceed 100 characters.";
+        public const string JobDescriptionRequired = "Job description is required.";
+        public const string JobDescriptionTooShort = "Job description must be at least 10 characters long.";
+        public const string JobDescriptionTooLong = "Job description cannot exceed 2000 characters.";
     }
 
     public static class DatabaseHealth
