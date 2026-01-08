@@ -70,10 +70,10 @@ public class JobController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> UpdateJob(
-    [FromServices] IUpdateJobUseCase useCase,
-    [FromRoute] Guid id,
-    [FromBody] UpdateJobRequest request,
-    CancellationToken token)
+        [FromServices] IUpdateJobUseCase useCase,
+        [FromRoute] Guid id,
+        [FromBody] UpdateJobRequest request,
+        CancellationToken token)
     {
         var result = await useCase.Execute(id, request, token);
 
@@ -86,9 +86,9 @@ public class JobController : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DeleteJob(
-    [FromServices] IDeleteJobByIdUseCase useCase,
-    [FromRoute] Guid id,
-    CancellationToken token)
+        [FromServices] IDeleteJobByIdUseCase useCase,
+        [FromRoute] Guid id,
+        CancellationToken token)
     {
         bool deleted = await useCase.Execute(id, token);
 
