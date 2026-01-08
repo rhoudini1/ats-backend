@@ -18,23 +18,23 @@ public class RegisterCandidateUseCase : IRegisterCandidateUseCase
         _candidateRepository = candidateRepository;
     }
 
-    public async Task<CandidateResponse> Execute(RegisterCandidateRequest request)
+    public async Task<CandidateResponse> Execute(RegisterCandidateRequest request, CancellationToken token)
     {
-        await Validate(request);
+        await Validate(request, token);
 
         var candidate = request.MapToCandidate();
 
-        var result = await _candidateRepository.CreateAsync(candidate);
+        var result = await _candidateRepository.CreateAsync(candidate, token);
 
         return result.MapToResponse();
     }
 
-    private async Task Validate(RegisterCandidateRequest request)
+    private async Task Validate(RegisterCandidateRequest request, CancellationToken token)
     {
         var validator = new RegisterCandidateValidator();
         var result = validator.Validate(request);
 
-        var possibleRegisteredUser = await _candidateRepository.GetByEmailAsync(request.Email);
+        var possibleRegisteredUser = await _candidateRepository.GetByEmailAsync(request.Email, token);
         if (possibleRegisteredUser is not null)
         {
             result.Errors.Add(new ValidationFailure(string.Empty, ErrorMessages.Validation.EmailAlreadyRegistered));

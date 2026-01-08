@@ -10,38 +10,38 @@ public class ICandidateRepositoryBuilder
 
     public ICandidateRepositoryBuilder() => _repository = new Mock<ICandidateRepository>();
 
-    public ICandidateRepositoryBuilder WithCreateAsync(Candidate candidate)
+    public ICandidateRepositoryBuilder WithCreateAsync()
     {
         _repository
-            .Setup(repo => repo.CreateAsync(It.IsAny<Candidate>()))
-            .ReturnsAsync((Candidate c) => c);
+            .Setup(repo => repo.CreateAsync(It.IsAny<Candidate>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync((Candidate c, CancellationToken _) => c);
         return this;
     }
 
     public ICandidateRepositoryBuilder WithGetByEmail(string email, Candidate? candidate)
     {
-        _repository.Setup(r => r.GetByEmailAsync(email))
+        _repository.Setup(r => r.GetByEmailAsync(email, It.IsAny<CancellationToken>()))
            .ReturnsAsync(candidate);
         return this;
     }
 
     public ICandidateRepositoryBuilder WithGetById(Guid id, Candidate? candidate)
     {
-        _repository.Setup(repo => repo.GetByIdAsync(id))
+        _repository.Setup(repo => repo.GetByIdAsync(id, It.IsAny<CancellationToken>()))
            .ReturnsAsync(candidate);
         return this;
     }
 
     public ICandidateRepositoryBuilder WithGetPaged(int page, int size, IEnumerable<ATS.Domain.Entities.Candidate> candidates)
     {
-        _repository.Setup(repo => repo.GetPagedAsync(page, size))
+        _repository.Setup(repo => repo.GetPagedAsync(page, size, It.IsAny<CancellationToken>()))
             .ReturnsAsync(candidates);
         return this;
     }
 
     public ICandidateRepositoryBuilder WithCountTotal(int total)
     {
-        _repository.Setup(repo => repo.CountTotalAsync())
+        _repository.Setup(repo => repo.CountTotalAsync(It.IsAny<CancellationToken>()))
             .ReturnsAsync(total);
         return this;
     }

@@ -16,12 +16,12 @@ public class ListCandidatesUseCase : IListCandidatesUseCase
         _candidateRepository = candidateRepository;
     }
 
-    public async Task<PagedResponse<CandidateResponse>> Execute(ListRequest request)
+    public async Task<PagedResponse<CandidateResponse>> Execute(ListRequest request, CancellationToken token)
     {
         Validate(request);
 
-        var candidates = await _candidateRepository.GetPagedAsync(request.Page, request.Size);
-        int totalCount = await _candidateRepository.CountTotalAsync();
+        var candidates = await _candidateRepository.GetPagedAsync(request.Page, request.Size, token);
+        int totalCount = await _candidateRepository.CountTotalAsync(token);
 
         return new PagedResponse<CandidateResponse>
         {

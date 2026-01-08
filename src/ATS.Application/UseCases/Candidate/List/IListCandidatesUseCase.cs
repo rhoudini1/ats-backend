@@ -5,5 +5,5 @@ namespace ATS.Application.UseCases.Candidate.List;
 
 public interface IListCandidatesUseCase
 {
-    Task<PagedResponse<CandidateResponse>> Execute(ListRequest request);
+    Task<PagedResponse<CandidateResponse>> Execute(ListRequest request, CancellationToken cancellationToken);
 }

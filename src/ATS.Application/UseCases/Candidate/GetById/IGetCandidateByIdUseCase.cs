@@ -4,5 +4,5 @@ namespace ATS.Application.UseCases.Candidate.GetById;
 
 public interface IGetCandidateByIdUseCase
 {
-    Task<CandidateResponse?> Execute(Guid id);
+    Task<CandidateResponse?> Execute(Guid id, CancellationToken cancellationToken);
 }

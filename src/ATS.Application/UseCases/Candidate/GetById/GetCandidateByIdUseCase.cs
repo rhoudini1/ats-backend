@@ -13,9 +13,9 @@ public class GetCandidateByIdUseCase : IGetCandidateByIdUseCase
         _candidateRepository = candidateRepository;
     }
 
-    public async Task<CandidateResponse?> Execute(Guid id)
+    public async Task<CandidateResponse?> Execute(Guid id, CancellationToken token)
     {
-        var candidate = await _candidateRepository.GetByIdAsync(id);
+        var candidate = await _candidateRepository.GetByIdAsync(id, token);
 
         if (candidate is null)
             return null;

@@ -26,13 +26,14 @@ public class ListCandidatesUseCaseTests
 
         var useCase = new ListCandidatesUseCase(builder.Build());
 
-        var result = await useCase.Execute(request);
+        var result = await useCase.Execute(request, It.IsAny<CancellationToken>());
 
         Assert.NotNull(result);
         Assert.Equal(2, result.Items.Count());
         Assert.Equal(10, result.TotalCount);
 
-        builder.GetMock().Verify(repo => repo.GetPagedAsync(request.Page, request.Size), Times.Once);
+        builder.GetMock()
+            .Verify(repo => repo.GetPagedAsync(request.Page, request.Size, It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Theory]
@@ -45,13 +46,15 @@ public class ListCandidatesUseCaseTests
         var builder = new ICandidateRepositoryBuilder();
         var useCase = new ListCandidatesUseCase(builder.Build());
 
-        var act = () => useCase.Execute(request);
+        var act = () => useCase.Execute(request, It.IsAny<CancellationToken>());
 
         var exception = await Assert.ThrowsAsync<ErrorOnValidationException>(act);
         Assert.Contains(ErrorMessages.Validation.PageNumberNegative, exception.Messages);
 
-        builder.GetMock().Verify(repo => repo.GetPagedAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
-        builder.GetMock().Verify(repo => repo.CountTotalAsync(), Times.Never);
+        builder.GetMock()
+            .Verify(repo => repo.GetPagedAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Never);
+        builder.GetMock()
+            .Verify(repo => repo.CountTotalAsync(It.IsAny<CancellationToken>()), Times.Never);
     }
 
     [Theory]
@@ -64,10 +67,11 @@ public class ListCandidatesUseCaseTests
         var builder = new ICandidateRepositoryBuilder();
         var useCase = new ListCandidatesUseCase(builder.Build());
 
-        var act = () => useCase.Execute(request);
+        var act = () => useCase.Execute(request, It.IsAny<CancellationToken>());
 
         await Assert.ThrowsAsync<ErrorOnValidationException>(act);
 
-        builder.GetMock().Verify(repo => repo.GetPagedAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
+        builder.GetMock()
+            .Verify(repo => repo.GetPagedAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Never);
     }
 }

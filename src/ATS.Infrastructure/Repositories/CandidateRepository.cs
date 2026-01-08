@@ -14,8 +14,8 @@ public class CandidateRepository : BaseRepository<Candidate>, ICandidateReposito
         _context = context;
     }
 
-    public async Task<Candidate?> GetByEmailAsync(string email)
+    public async Task<Candidate?> GetByEmailAsync(string email, CancellationToken cancellationToken)
     {
-        return await _context.Candidates.FirstOrDefaultAsync(candidate => candidate.Email == email);
+        return await _context.Candidates.FirstOrDefaultAsync(candidate => candidate.Email == email, cancellationToken);
     }
 }

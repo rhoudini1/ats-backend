@@ -28,19 +28,21 @@ public class RegisterCandidateUseCaseTests
         var candidate = request.MapToCandidate();
 
         var builder = new ICandidateRepositoryBuilder()
-            .WithCreateAsync(candidate)
+            .WithCreateAsync()
             .WithGetByEmail(request.Email, null);
         var candidateRepository = builder.Build();
         var useCase = new RegisterCandidateUseCase(candidateRepository);
+        var cancellationToken = CancellationToken.None;
 
-        var result = await useCase.Execute(request);
+        var result = await useCase.Execute(request, cancellationToken);
 
         Assert.NotNull(result);
         Assert.Equal(request.FullName, result.FullName);
 
         builder.GetMock().Verify(repo => repo.CreateAsync(
-            It.Is<ATS.Domain.Entities.Candidate>(c => c.Email == request.Email && c.FullName == request.FullName)),
-            Times.Once);
+            It.Is<ATS.Domain.Entities.Candidate>(c => c.Email == request.Email && c.FullName == request.FullName),
+            It.IsAny<CancellationToken>()),
+        Times.Once);
     }
 
     [Fact]
@@ -50,18 +52,20 @@ public class RegisterCandidateUseCaseTests
         var candidate = request.MapToCandidate();
 
         var builder = new ICandidateRepositoryBuilder()
-            .WithCreateAsync(candidate)
+            .WithCreateAsync()
             .WithGetByEmail(request.Email, candidate);
         var candidateRepository = builder.Build();
 
         var useCase = new RegisterCandidateUseCase(candidateRepository);
+        var cancellationToken = CancellationToken.None;
 
-        var act = () => useCase.Execute(request);
+        var act = () => useCase.Execute(request, cancellationToken);
 
         var exception = await Assert.ThrowsAsync<ErrorOnValidationException>(act);
         Assert.Contains(ErrorMessages.Validation.EmailAlreadyRegistered, exception.Messages);
 
-        builder.GetMock().Verify(r => r.CreateAsync(It.IsAny<ATS.Domain.Entities.Candidate>()), Times.Never);
+        builder.GetMock()
+            .Verify(r => r.CreateAsync(It.IsAny<ATS.Domain.Entities.Candidate>(), It.IsAny<CancellationToken>()), Times.Never);
     }
 
     [Fact]
@@ -75,14 +79,16 @@ public class RegisterCandidateUseCaseTests
         var candidateRepository = builder.Build();
 
         var useCase = new RegisterCandidateUseCase(candidateRepository);
+        var cancellationToken = CancellationToken.None;
 
-        var act = () => useCase.Execute(request);
+        var act = () => useCase.Execute(request, cancellationToken);
 
         var exception = await Assert.ThrowsAsync<ErrorOnValidationException>(act);
 
         Assert.Contains(ErrorMessages.Validation.FullNameTooShort, exception.Messages);
         Assert.Contains(ErrorMessages.Validation.InvalidEmailFormat, exception.Messages);
 
-        builder.GetMock().Verify(r => r.CreateAsync(It.IsAny<ATS.Domain.Entities.Candidate>()), Times.Never);
+        builder.GetMock()
+            .Verify(r => r.CreateAsync(It.IsAny<ATS.Domain.Entities.Candidate>(), It.IsAny<CancellationToken>()), Times.Never);
     }
 }

@@ -1,5 +1,4 @@
-﻿using ATS.Domain.Entities;
-using ATS.Domain.Interfaces.Repositories;
+﻿using ATS.Domain.Interfaces.Repositories;
 using ATS.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,41 +15,41 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
         _dbSet = _context.Set<T>();
     }
 
-    public async Task<T> CreateAsync(T entity)
+    public async Task<T> CreateAsync(T entity, CancellationToken cancellationToken)
     {
-        await _dbSet.AddAsync(entity);
-        await _context.SaveChangesAsync();
+        await _dbSet.AddAsync(entity, cancellationToken);
+        await _context.SaveChangesAsync(cancellationToken);
         return entity;
     }
 
-    public async Task<T?> GetByIdAsync(Guid id)
+    public async Task<T?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
-        return await _dbSet.FindAsync(id);
+        return await _dbSet.FindAsync(id, cancellationToken);
     }
 
-    public async Task<IEnumerable<T>> GetPagedAsync(int pageNumber, int pageSize)
+    public async Task<IEnumerable<T>> GetPagedAsync(int pageNumber, int pageSize, CancellationToken cancellationToken)
     {
-        return await _dbSet.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+        return await _dbSet.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync(cancellationToken);
     }
 
-    public async Task<int> CountTotalAsync()
+    public async Task<int> CountTotalAsync(CancellationToken cancellationToken)
     {
-        return await _dbSet.CountAsync();
+        return await _dbSet.CountAsync(cancellationToken);
     }
 
-    public async Task<T> UpdateAsync(T entity)
+    public async Task<T> UpdateAsync(T entity, CancellationToken cancellationToken)
     {
         _dbSet.Update(entity);
-        await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync(cancellationToken);
         return entity;
     }
 
-    public async Task<bool> DeleteAsync(Guid id)
+    public async Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken)
     {
-        var entity = await GetByIdAsync(id);
+        var entity = await GetByIdAsync(id, cancellationToken);
         if (entity == null) return false;
         _dbSet.Remove(entity);
-        await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync(cancellationToken);
         return true;
     }
 }

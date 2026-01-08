@@ -15,9 +15,10 @@ public class CandidateController : ControllerBase
     [ProducesResponseType(typeof(CandidateResponse), StatusCodes.Status201Created)]
     public async Task<IActionResult> Register(
         [FromServices] IRegisterCandidateUseCase useCase,
-        [FromBody] RegisterCandidateRequest request)
+        [FromBody] RegisterCandidateRequest request,
+        CancellationToken token)
     {
-        var result = await useCase.Execute(request);
+        var result = await useCase.Execute(request, token);
 
         return Created(string.Empty, result);
     }
@@ -27,9 +28,10 @@ public class CandidateController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetCandidate(
         [FromServices] IGetCandidateByIdUseCase useCase,
-        [FromRoute] Guid id)
+        [FromRoute] Guid id,
+        CancellationToken token)
     {
-        var result = await useCase.Execute(id);
+        var result = await useCase.Execute(id, token);
 
         if (result is null)
             return NotFound();
@@ -41,9 +43,10 @@ public class CandidateController : ControllerBase
     [ProducesResponseType(typeof(CandidateResponse), StatusCodes.Status200OK)]
     public async Task<IActionResult> ListCandidates(
         [FromServices] IListCandidatesUseCase useCase,
-        [FromQuery] ListRequest request)
+        [FromQuery] ListRequest request,
+        CancellationToken token)
     {
-        var result = await useCase.Execute(request);
+        var result = await useCase.Execute(request, token);
 
         return Ok(result);
     }

@@ -16,13 +16,13 @@ public class GetCandidateByIdUseCaseTests
             .WithGetById(candidateId, candidate);
 
         var useCase = new GetCandidateByIdUseCase(builder.Build());
-        var result = await useCase.Execute(candidateId);
+        var result = await useCase.Execute(candidateId, It.IsAny<CancellationToken>());
 
         Assert.NotNull(result);
         Assert.Equal(candidate.FullName, result.FullName);
         Assert.Equal(candidate.Email, result.Email);
 
-        builder.GetMock().Verify(repo => repo.GetByIdAsync(candidateId), Times.Once);
+        builder.GetMock().Verify(repo => repo.GetByIdAsync(candidateId, It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -33,10 +33,10 @@ public class GetCandidateByIdUseCaseTests
             .WithGetById(candidateId, null);
 
         var useCase = new GetCandidateByIdUseCase(builder.Build());
-        var result = await useCase.Execute(candidateId);
+        var result = await useCase.Execute(candidateId, It.IsAny<CancellationToken>());
 
         Assert.Null(result);
 
-        builder.GetMock().Verify(repo => repo.GetByIdAsync(candidateId), Times.Once);
+        builder.GetMock().Verify(repo => repo.GetByIdAsync(candidateId, It.IsAny<CancellationToken>()), Times.Once);
     }
 }
