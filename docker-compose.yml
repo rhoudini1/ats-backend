@@ -26,5 +26,19 @@ services:
     depends_on:
       - mongodb
 
+  ats-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ats_api_service
+    profiles: ["full"]
+    ports:
+      - "8080:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__MongoDb=mongodb://admin:securepass1234@mongodb:27017/
+    depends_on:
+      - mongodb
+
 volumes:
   mongo_data:
