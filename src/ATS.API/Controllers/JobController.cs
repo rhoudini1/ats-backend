@@ -1,4 +1,5 @@
 ﻿using ATS.Application.UseCases.Job.GetById;
+using ATS.Application.UseCases.Job.List;
 using ATS.Application.UseCases.Job.Register;
 using ATS.Contracts.Requests;
 using ATS.Contracts.Responses;
@@ -37,14 +38,27 @@ public class JobController : ControllerBase
     [ProducesResponseType(typeof(JobResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetJob(
-    [FromServices] IGetJobByIdUseCase useCase,
-    [FromRoute] Guid id,
-    CancellationToken token)
+        [FromServices] IGetJobByIdUseCase useCase,
+        [FromRoute] Guid id,
+        CancellationToken token)
     {
         var result = await useCase.Execute(id, token);
 
         if (result is null)
             return NotFound();
+
+        return Ok(result);
+    }
+
+    [HttpGet(ApiEndpoints.Job.List)]
+    [OutputCache(PolicyName = "JobsCache")]
+    [ProducesResponseType(typeof(PagedResponse<JobResponse>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> ListJobs(
+        [FromServices] IListJobsUseCase useCase,
+        [FromQuery] ListRequest request,
+        CancellationToken token)
+    {
+        var result = await useCase.Execute(request, token);
 
         return Ok(result);
     }
