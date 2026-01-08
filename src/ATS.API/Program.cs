@@ -28,6 +28,11 @@ try
             c.Cache()
             .Expire(TimeSpan.FromMinutes(1))
             .Tag("candidates"));
+        // Adding a policy for jobs just to show that they can be different
+        options.AddPolicy("JobsCache", c =>
+            c.Cache()
+            .Expire(TimeSpan.FromMinutes(2))
+            .Tag("jobs"));
     });
 
     builder.Services.AddControllers();

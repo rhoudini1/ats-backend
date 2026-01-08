@@ -1,4 +1,5 @@
-﻿using ATS.Application.UseCases.Job.Register;
+﻿using ATS.Application.UseCases.Job.GetById;
+using ATS.Application.UseCases.Job.Register;
 using ATS.Contracts.Requests;
 using ATS.Contracts.Responses;
 using Microsoft.AspNetCore.Mvc;
@@ -26,8 +27,25 @@ public class JobController : ControllerBase
     {
         var result = await useCase.Execute(request, token);
 
-        await _outputCacheStore.EvictByTagAsync("job", token);
+        await _outputCacheStore.EvictByTagAsync("jobs", token);
 
         return Created(string.Empty, result);
+    }
+
+    [HttpGet(ApiEndpoints.Job.GetById)]
+    [OutputCache(PolicyName = "JobsCache")]
+    [ProducesResponseType(typeof(JobResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetJob(
+    [FromServices] IGetJobByIdUseCase useCase,
+    [FromRoute] Guid id,
+    CancellationToken token)
+    {
+        var result = await useCase.Execute(id, token);
+
+        if (result is null)
+            return NotFound();
+
+        return Ok(result);
     }
 }
