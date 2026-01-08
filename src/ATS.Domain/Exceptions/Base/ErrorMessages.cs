@@ -23,4 +23,12 @@ public static class ErrorMessages
         public const string PageSizeNegative = "Page size must be greater than 0.";
         public const string PageSizeExceeded = "Page size must not exceed 100.";
     }
+
+    public static class DatabaseHealth
+    {
+        public const string Healthy = "Database connection is healthy.";
+        public const string Unhealthy = "Database connection is unhealthy.";
+        public const string Error = "An error occurred while checking database health.";
+        public const string Timeout = "Timeout: database took too long to answer.";
+    }
 }
