@@ -46,6 +46,14 @@ public class ICandidateRepositoryBuilder
         return this;
     }
 
+    public ICandidateRepositoryBuilder WithUpdate()
+    {
+        _repository
+            .Setup(repo => repo.UpdateAsync(It.IsAny<Candidate>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync((Candidate c, CancellationToken _) => c);
+        return this;
+    }
+
     public ICandidateRepositoryBuilder WithDelete(Guid id)
     {
         _repository.Setup(repo => repo.DeleteAsync(id, It.IsAny<CancellationToken>()))
