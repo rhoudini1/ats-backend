@@ -17,7 +17,7 @@ A ser adicionado:
 - Listagem de candidatos candidatados a uma vaga
 - Cadastro de currículo para um candidato
 
-> Deixei os CRUDs "não obrigatórios" por último porque seria um tanto repetitivo. Portanto, tendo um CRUD pronto, preferi focar em adicionar funcionalidades que dão robustez a uma API ter desde seus primeiros passos.
+> Deixei os CRUDs "não obrigatórios" por último porque seria um tanto repetitivo. Portanto, tendo um CRUD pronto, preferi focar em adicionar funcionalidades que dão robustez a uma API desde seus primeiros passos.
 
 ---
 
@@ -53,7 +53,7 @@ Para rodar o ambiente de desenvolvimento, instale:
 
 ## ▶️ Como rodar o projeto
 
-### Quick Start com Docker
+### 📦 Quick Start com Docker
 
 1. Certifique-se de ter o Docker instalado.
 2. Na raiz do projeto, execute: `docker-compose --profile full up -d --build`
@@ -64,7 +64,7 @@ Para rodar o ambiente de desenvolvimento, instale:
 
 > O arquivo compatível com OpenAPI será encontrado em `http://localhost:8080/openapi/v1.json`
 
-### Como desenvolvedor (com IDE)
+### 👨‍💻 Como desenvolvedor (com IDE)
 
 Faça o clone do repositório.
 
@@ -114,6 +114,14 @@ O projeto busca seguir a Arquitetura Limpa, que permite melhor manutenção e po
 - src/Api: projeto ASP.NET Web API que contém endpoints.
 - tests/UnitTests: projeto xUnit para testes de unidade.
 
+## ⚠️ Filtro de Exceptions
+
+Usei filtro de exceptions que traz várias vantagens:
+
+- evitar try/catch nos controllers.
+- tratamento de erros global com status codes apropriados.
+- não expõe stack trace completo de erros.
+
 ## 🔬 Health Check
 
 Endpoint para consultar saúde da base de dados disponível em `/_health`.
@@ -123,14 +131,6 @@ A resposta vai além da padrão (que só traz Healthy ou Unhealthy), e inclui:
 - Status: Healthy ou Unhealthy.
 - Duração total da requisição.
 - Detalhes de cada entrada que compõem o teste de saúde.
-
-## ⚠️ Filtro de Exceptions
-
-Usei filtro de exceptions que traz várias vantagens:
-
-- evitar try/catch nos controllers.
-- tratamento de erros global com status codes apropriados.
-- não expõe stack trace completo de erros.
 
 ## 📊 Logs e Monitoramento
 
@@ -144,9 +144,13 @@ Implementei um cache bem simples, de 1 minuto, nativo do .NET, para endpoints de
 
 Os endpoints de escrita possuem a chamada `await _outputCacheStore.EvictByTagAsync(tag, cancellationToken);` para apagar o cache.
 
+Demonstração nos logs:
+
+<img width="1158" height="128" alt="cache" src="https://github.com/user-attachments/assets/10fb6bb0-eaab-4b2f-9de8-a60b63cca6e3" />
+
 ## 🗺️ Mapping
 
-Mapping manual usando Extension methods, tanto de Request --> Entidade quanto de Entidade --> Response.
+Fiz um mapping usando Extension methods, tanto de Request --> Entidade quanto de Entidade --> Response.
 
 Em um cenário mais robusto, convém adicionar um Mapper.
 
@@ -181,16 +185,20 @@ Testei principalmente:
 - Casos de uso: pois contêm regras de negócio;
 - Validators: importante garantir o funcionamento correto.
 
-Não adicionei testes unitários para os Controllers, porque testes de integração já ajudam a testá-los, quando existentes. Mas seria possível adicionar testes para eles também.
-
-Da mesma forma, como a API até aqui é bastante simples, não houve necessidade de adicionar testes a nível de domínio (entidades, value-objects ou eventos de domínio).
-
 ---
 
 # 🧐 Considerações
 
-## Soft delete
+## Recursos não implementados, porém possíveis
+
+### Soft delete
 
 Em vez de apagar registros do banco de dados, é possível implementar um mecanismo de soft delete para apenas inativar registros.
 
 O EF Core possui métodos que filtram registros com base em regras definidas, evitando que se faça a filtragem manual com `.Where()`, que pode ser esquecida pelo desenvolvedor.
+
+### Testes unitários para controllers
+
+Não adicionei testes unitários para os Controllers, porque testes de integração já ajudam a testá-los, quando existentes. Mas seria possível adicionar testes para eles também.
+
+Da mesma forma, como a API até aqui é bastante simples, não houve necessidade de adicionar testes a nível de domínio (entidades, value-objects ou eventos de domínio).
