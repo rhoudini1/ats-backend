@@ -1,6 +1,7 @@
 ﻿using ATS.Application.UseCases.Job.Delete;
 using ATS.Application.UseCases.Job.GetById;
 using ATS.Application.UseCases.Job.List;
+using ATS.Application.UseCases.Job.ListApplications;
 using ATS.Application.UseCases.Job.Register;
 using ATS.Application.UseCases.Job.Update;
 using ATS.Contracts.Requests;
@@ -61,6 +62,20 @@ public class JobController : ControllerBase
         CancellationToken token)
     {
         var result = await useCase.Execute(request, token);
+
+        return Ok(result);
+    }
+
+    [HttpGet(ApiEndpoints.Job.Applications)]
+    [OutputCache(PolicyName = "AppsByJobPolicy")]
+    [ProducesResponseType(typeof(PagedResponse<JobResponse>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetApplications(
+        [FromServices] IListJobApplicationsUseCase useCase,
+        [FromRoute] Guid id,
+        [FromQuery] ListRequest request,
+        CancellationToken token)
+    {
+        var result = await useCase.Execute(id, request, token);
 
         return Ok(result);
     }

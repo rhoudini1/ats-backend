@@ -55,7 +55,7 @@ public class CandidateController : ControllerBase
 
     [HttpGet(ApiEndpoints.Candidate.List)]
     [OutputCache(PolicyName = "CandidatesCache")]
-    [ProducesResponseType(typeof(CandidateResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(PagedResponse<CandidateResponse>), StatusCodes.Status200OK)]
     public async Task<IActionResult> ListCandidates(
         [FromServices] IListCandidatesUseCase useCase,
         [FromQuery] ListRequest request,
@@ -68,7 +68,7 @@ public class CandidateController : ControllerBase
 
     [HttpGet(ApiEndpoints.Candidate.Applications)]
     [OutputCache(PolicyName = "AppsByCandidatePolicy")]
-    [ProducesResponseType(typeof(CandidateResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(PagedResponse<CandidateResponse>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetApplications(
         [FromServices] IListCandidateApplicationsUseCase useCase,
         [FromRoute] Guid id,
