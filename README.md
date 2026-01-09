@@ -101,6 +101,46 @@ Com uma IDE como o Visual Studio, clique com botão direito no projeto de Testes
 
 ---
 
+# Endpoints
+
+## CRUD de candidatos
+
+| Método | Endpoint | Descrição | Entrada (Request) | Retorno (Success) |
+|---|---|---|---|---|
+| POST | `/api/candidate` | Cadastra um novo candidato | JSON Body | 201 Created |
+| GET | `/api/candidate/{id}` | Busca um candidato por ID | Route ID | 200 OK |
+| GET | `/api/candidate` | Lista candidatos (Paginado) | Query Params | 200 OK |
+| GET | `/api/candidate/{id}/applications` | Lista aplicações de um candidato. | Route ID | 200 OK |
+| PUT | `/api/candidate/{id}` | Atualiza dados do candidato | Body + ID | 200 OK |
+| DELETE | `/api/candidate/{id}` | Remove um candidato | Route ID | 204 No Content |
+
+- Cache Strategy: Os endpoints de GET utilizam a política CandidatesCache.
+- Cache Invalidation: Operações de escrita (POST, PUT, DELETE) executam automaticamente o `EvictByTagAsync` para a tag "candidates", garantindo que a listagem esteja sempre atualizada após uma mudança.
+- Resiliência: Todos os endpoints suportam `CancellationToken` para interromper o processamento caso o cliente cancele a requisição.
+
+> 💡 **Dica:** Para testar os payloads e visualizar os modelos de dados completos, acesse a documentação interativa em `{host}/scalar/v1` (apenas ambiente de desenvolvimento).
+
+## CRUD de vagas
+
+| Método | Endpoint | Descrição | Entrada (Request) | Retorno (Success) |
+|---|---|---|---|---|
+| POST | `/api/job` | Cadastra uma nova vaga | JSON Body | 201 Created |
+| GET | `/api/job/{id}` | Busca uma vaga por ID | Route ID | 200 OK |
+| GET | `/api/job` | Lista vagas (Paginado) | Query Params | 200 OK |
+| GET | `/api/job/{id}/applications` | Lista aplicações de uma vaga. | Route ID | 200 OK |
+| PUT | `/api/job/{id}` | Atualiza dados da vaga | Body + ID | 200 OK |
+| DELETE | `/api/job/{id}` | Remove uma vaga | Route ID | 204 No Content |
+
+Os endpoints de GET utilizam a política JobsCache, criada propositalmente apenas para demonstrar que é possível separar políticas de cache.
+
+## Aplicação para vaga (JobApplication)
+
+| Método | Endpoint | Descrição | Entrada (Request) | Retorno (Success) |
+|---|---|---|---|---|
+| POST | `/api/application` | Registra aplicação de um candidato a uma vaga. | JSON Body | 201 Created |
+
+---
+
 # Decisões técnicas e recursos
 
 ## 🗂️ Estrutura
@@ -126,7 +166,7 @@ Usei filtro de exceptions que traz várias vantagens:
 
 Endpoint para consultar saúde da base de dados disponível em `/_health`.
 
-A resposta vai além da padrão (que só traz Healthy ou Unhealthy), e inclui:
+É uma prática essencial para garantir confiabilidade e observabilidade do sistema. A resposta vai além da padrão (que só traz Healthy ou Unhealthy), e inclui:
 
 - Status: Healthy ou Unhealthy.
 - Duração total da requisição.
@@ -142,11 +182,17 @@ No momento, apenas loga no Console, mas outras estratégias podem ser adicionada
 
 Implementei um cache bem simples, de 1 minuto, nativo do .NET, para endpoints de leitura.
 
-Os endpoints de escrita possuem a chamada `await _outputCacheStore.EvictByTagAsync(tag, cancellationToken);` para apagar o cache.
-
 Demonstração nos logs:
 
 <img width="1158" height="128" alt="cache" src="https://github.com/user-attachments/assets/10fb6bb0-eaab-4b2f-9de8-a60b63cca6e3" />
+
+Um olhar atento verá que defini políticas customizadas para consultas de aplicações, seja para vagas ou candidatos.
+
+Em vez de usar um cache genérico que precisaria ser limpo por completo a cada mudança, as políticas permitem criar Tags Dinâmicas baseadas no ID da rota (ex: `job-apps-{id}`).
+
+O benefício prático é que quando um candidato se inscreve em uma vaga, o sistema identifica e apaga apenas o cache específico daquela vaga e daquele candidato.
+
+Isso garante que os dados estejam sempre atualizados sem sacrificar a velocidade do sistema ou sobrecarregar o banco de dados desnecessariamente.
 
 ## 🗺️ Mapping
 
@@ -187,9 +233,9 @@ Testei principalmente:
 
 ---
 
-# 🧐 Considerações
+## 🧐 Considerações
 
-## Recursos não implementados, porém possíveis
+Principalmente sobre recursos não implementados, porém possíveis.
 
 ### Soft delete
 
@@ -202,3 +248,13 @@ O EF Core possui métodos que filtram registros com base em regras definidas, ev
 Não adicionei testes unitários para os Controllers, porque testes de integração já ajudam a testá-los, quando existentes. Mas seria possível adicionar testes para eles também.
 
 Da mesma forma, como a API até aqui é bastante simples, não houve necessidade de adicionar testes a nível de domínio (entidades, value-objects ou eventos de domínio).
+
+### Rate Limiting
+
+Fundamental para proteger a aplicação, e poderia ser implementada nativamente com o .NET, mas não adicionei por dois motivos: primeiro, para priorizar outros pontos; segundo, porque essa camada pode ficar fora da aplicação, em um API gateway.
+
+### Autenticação
+
+A princípio, autenticação via chave API key estava nos planos, mas decidi priorizar a fluidez nos testes do avaliador. A ausência de autenticação simplifica a exploração imediata dos endpoints via Swagger/Scalar sem a necessidade de configurações adicionais de Headers.
+
+Mas poderia ser adicionada no futuro uma chave fixa no appsettings.json, ou algo mais robusto como salvar chaves criptografadas no banco de dados e só permitir requisições a partir delas.
