@@ -8,6 +8,7 @@ public class AppDbContext : DbContext
 {
     public DbSet<Candidate> Candidates { get; set; }
     public DbSet<Job> Jobs { get; set; }
+    public DbSet<JobApplication> JobApplications { get; set; }
 
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
@@ -26,6 +27,17 @@ public class AppDbContext : DbContext
             jm.ToCollection("jobs");
             jm.HasKey(job => job.Id);
             jm.Property(job => job.Status).HasConversion<string>();
+        });
+
+        modelBuilder.Entity<JobApplication>(jam =>
+        {
+            jam.ToCollection("job_applications");
+            jam.HasKey(ja => ja.Id);
+
+            jam.HasIndex(ja => ja.CandidateId);
+            jam.HasIndex(ja => ja.JobId);
+
+            jam.Property(ja => ja.Status).HasConversion<string>();
         });
     }
 }

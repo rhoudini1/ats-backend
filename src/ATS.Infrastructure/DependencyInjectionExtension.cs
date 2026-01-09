@@ -18,5 +18,6 @@ public static class DependencyInjectionExtension
 
         services.AddScoped<ICandidateRepository, CandidateRepository>();
         services.AddScoped<IJobRepository, JobRepository>();
+        services.AddScoped<IJobApplicationRepository, JobApplicationRepository>();
     }
 }
