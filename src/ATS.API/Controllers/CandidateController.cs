@@ -1,6 +1,7 @@
 ﻿using ATS.Application.UseCases.Candidate.Delete;
 using ATS.Application.UseCases.Candidate.GetById;
 using ATS.Application.UseCases.Candidate.List;
+using ATS.Application.UseCases.Candidate.ListApplications;
 using ATS.Application.UseCases.Candidate.Register;
 using ATS.Application.UseCases.Candidate.Update;
 using ATS.Contracts.Requests;
@@ -61,6 +62,20 @@ public class CandidateController : ControllerBase
         CancellationToken token)
     {
         var result = await useCase.Execute(request, token);
+
+        return Ok(result);
+    }
+
+    [HttpGet(ApiEndpoints.Candidate.Applications)]
+    [OutputCache(PolicyName = "AppsByCandidatePolicy")]
+    [ProducesResponseType(typeof(CandidateResponse), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetApplications(
+        [FromServices] IListCandidateApplicationsUseCase useCase,
+        [FromRoute] Guid id,
+        [FromQuery] ListRequest request,
+        CancellationToken token)
+    {
+        var result = await useCase.Execute(id, request, token);
 
         return Ok(result);
     }

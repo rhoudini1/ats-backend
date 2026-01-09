@@ -1,6 +1,7 @@
 ﻿using ATS.Application.UseCases.Candidate.Delete;
 using ATS.Application.UseCases.Candidate.GetById;
 using ATS.Application.UseCases.Candidate.List;
+using ATS.Application.UseCases.Candidate.ListApplications;
 using ATS.Application.UseCases.Candidate.Register;
 using ATS.Application.UseCases.Candidate.Update;
 using ATS.Application.UseCases.Job.Delete;
@@ -22,6 +23,7 @@ public static class DependencyInjectionExtension
         services.AddScoped<IListCandidatesUseCase, ListCandidatesUseCase>();
         services.AddScoped<IUpdateCandidateUseCase, UpdateCandidateUseCase>();
         services.AddScoped<IDeleteCandidateByIdUseCase, DeleteCandidateByIdUseCase>();
+        services.AddScoped<IListCandidateApplicationsUseCase, ListCandidateApplicationsUseCase>();
 
         services.AddScoped<IRegisterJobUseCase, RegisterJobUseCase>();
         services.AddScoped<IGetJobByIdUseCase, GetJobByIdUseCase>();

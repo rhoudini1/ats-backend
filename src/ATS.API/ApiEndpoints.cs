@@ -13,6 +13,7 @@ public static class ApiEndpoints
         public const string List = Base;
         public const string Update = $"{Base}/{{id:guid}}";
         public const string Delete = $"{Base}/{{id:guid}}";
+        public const string Applications = $"{Base}/{{id:guid}}/applications";
     }
 
     public static class Job
