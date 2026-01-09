@@ -25,4 +25,12 @@ public static class ApiEndpoints
         public const string Update = $"{Base}/{{id:guid}}";
         public const string Delete = $"{Base}/{{id:guid}}";
     }
+
+    public static class JobApplication
+    {
+        private const string Base = $"{ApiBase}/application";
+
+        public const string Register = Base;
+        public const string GetById = $"{Base}/{{id:guid}}";
+    }
 }

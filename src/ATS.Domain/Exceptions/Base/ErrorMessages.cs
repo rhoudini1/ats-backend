@@ -36,6 +36,8 @@ public static class ErrorMessages
         public const string JobDescriptionTooShort = "Job description must be at least 10 characters long.";
         public const string JobDescriptionTooLong = "Job description cannot exceed 2000 characters.";
         public const string InvalidJobStatus = "The provided job status is invalid.";
+
+        public const string AlreadyAppliedToJob = "The candidate has already applied to this job.";
     }
 
     public static class DatabaseHealth

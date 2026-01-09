@@ -1,9 +1,11 @@
 using ATS.API.Filters;
 using ATS.API.Health;
+using ATS.API.Policies;
 using ATS.Application;
 using ATS.Infrastructure;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.AspNetCore.OutputCaching;
 using Scalar.AspNetCore;
 using Serilog;
 
@@ -21,7 +23,7 @@ try
 
     builder.Host.UseSerilog();
 
-    builder.Services.AddOutputCache(options =>
+    builder.Services.AddOutputCache(static options =>
     {
         options.AddBasePolicy(c => c.Cache());
         options.AddPolicy("CandidatesCache", c =>
@@ -33,6 +35,12 @@ try
             c.Cache()
             .Expire(TimeSpan.FromMinutes(2))
             .Tag("jobs"));
+        // Custom cache policies for job applications
+        options.AddPolicy("AppsByCandidatePolicy", c =>
+            c.AddPolicy<CandidateApplicationsCachePolicy>().Expire(TimeSpan.FromMinutes(10)));
+
+        options.AddPolicy("AppsByJobPolicy", c =>
+            c.AddPolicy<JobApplicationsCachePolicy>().Expire(TimeSpan.FromMinutes(10)));
     });
 
     builder.Services.AddControllers();
