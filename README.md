@@ -9,15 +9,9 @@
 Atualmente a API suporta:
 
 - CRUD de candidatos
-
-A ser adicionado:
-
 - CRUD de vagas
 - Candidato se candidatar a uma vaga
 - Listagem de candidatos candidatados a uma vaga
-- Cadastro de currículo para um candidato
-
-> Deixei os CRUDs "não obrigatórios" por último porque seria um tanto repetitivo. Portanto, tendo um CRUD pronto, preferi focar em adicionar funcionalidades que dão robustez a uma API desde seus primeiros passos.
 
 ---
 
